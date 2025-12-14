@@ -1,0 +1,63 @@
+-- 1. Tworzymy bazę danych
+CREATE DATABASE IF NOT EXISTS pinguino_travel;
+USE pinguino_travel;
+
+-- 2. Tworzymy tabelę wycieczek (tours)
+CREATE TABLE IF NOT EXISTS tours (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    duration VARCHAR(50),      -- np. "7 days" - string dla elastyczności na start
+    group_size VARCHAR(50),    -- np. "Up to 12"
+    rating DECIMAL(3, 1) DEFAULT 0.0,
+    reviews_count INT DEFAULT 0,
+    image_url TEXT,            -- link do zdjęcia
+    location VARCHAR(100),     -- np. "France" (przydatne do filtrowania)
+    region VARCHAR(50),        -- np. "europe", "asia" (do filtrowania w TravelsPage)
+    is_featured BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. (Opcjonalnie) Dodajemy jeden przykładowy rekord, żebyś widział coś od razu
+INSERT INTO tours (title, description, price, duration, group_size, rating, reviews_count, image_url, location, region, is_featured)
+VALUES ('Swiss Alps Adventure', 'Experience the breathtaking beauty of the Swiss Alps.', 2499.00, '7 days', 'Up to 12', 4.9, 234, 'https://images.unsplash.com/photo-1633942515749-f93dddbbcff9', 'Switzerland', 'europe', TRUE);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(80) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+-- 1. (Opcjonalnie) Usuń użytkownika, jeśli został źle utworzony, żeby zacząć na czysto
+DROP USER IF EXISTS 'pinguino_user'@'%';
+
+-- 2. Stwórz użytkownika jawnie (to jest krok, którego brakowało)
+CREATE USER 'pinguino_user'@'%' IDENTIFIED BY 'pinguino123';
+
+-- 3. Dopiero teraz nadaj uprawnienia
+GRANT ALL PRIVILEGES ON pinguino_travel.* TO 'pinguino_user'@'%';
+
+-- 4. Zatwierdź zmiany
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+USE pinguino_travel;
+
+-- Wyłączamy sprawdzanie kluczy obcych, żeby móc usuwać tabele w dowolnej kolejności
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Usuwamy stare tabele
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS cars;
+DROP TABLE IF EXISTS insurances;
+DROP TABLE IF EXISTS newsletter;
+DROP TABLE IF EXISTS tours;
+DROP TABLE IF EXISTS users;
+
+-- Włączamy z powrotem sprawdzanie kluczy
+SET FOREIGN_KEY_CHECKS = 1;
