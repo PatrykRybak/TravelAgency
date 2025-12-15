@@ -3,7 +3,7 @@ from datetime import timedelta
 
 class Config:
     # Baza danych
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://pinguino_user:pinguino123@145.239.81.215/pinguino_travel'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://pinguino_user:pinguino123@145.239.81.215/pinguino_travel?charset=utf8mb4'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     JWT_SECRET_KEY = 'super-tajny-klucz-pinguino-zmien-mnie'

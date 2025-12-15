@@ -82,12 +82,12 @@ export function Header({ currentPage }: HeaderProps) {
             >
               {t.rentCar}
             </Link>
-            <Link 
+            {/* <Link 
               to="/insurance" 
               className={`hover:text-[#E8A628] transition-colors ${currentPage === 'insurance' ? 'text-[#E8A628]' : ''}`}
             >
               {t.travelInsurance}
-            </Link>
+            </Link> */}
             <Link 
               to="/our-story" 
               className={`hover:text-[#E8A628] transition-colors ${currentPage === 'our-story' ? 'text-[#E8A628]' : ''}`}
@@ -137,13 +137,13 @@ export function Header({ currentPage }: HeaderProps) {
               >
                 {t.rentCar}
               </Link>
-              <Link 
+              {/* <Link 
                 to="/insurance" 
                 onClick={() => setIsMenuOpen(false)}
                 className={`text-left hover:text-[#E8A628] transition-colors ${currentPage === 'insurance' ? 'text-[#E8A628]' : ''}`}
               >
                 {t.travelInsurance}
-              </Link>
+              </Link> */}
               <Link 
                 to="/our-story" 
                 onClick={() => setIsMenuOpen(false)}

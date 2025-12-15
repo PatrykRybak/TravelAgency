@@ -16,9 +16,19 @@ interface Tour {
   duration?: string;
 }
 
+interface Review {
+  id: number;
+  username: string;
+  city: string;
+  country: string;
+  rating: number;
+  comment: string;
+}
+
 export function HomePage() {
   const { t, language } = useLanguage();
   const [featuredTours, setFeaturedTours] = useState<Tour[]>([]);
+  const [testimonials, setTestimonials] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,9 +36,11 @@ export function HomePage() {
       try {
         const data = await api.get('/tours?featured=true');
         setFeaturedTours(data);
+        const reviewsData = await api.get('/reviews');
+        setTestimonials(reviewsData);
       } catch (e) {
         console.error(e);
-        toast.error('Could not load featured destinations');
+        toast.error('Could not fetch data');
       } finally {
         setIsLoading(false);
       }
@@ -36,58 +48,6 @@ export function HomePage() {
 
     fetchFeatured();
   }, []);
-
-  const testimonials = language === 'en' ? [
-    {
-      id: 'sarah-johnson',
-      name: 'Sarah Johnson',
-      location: 'New York, USA',
-      rating: 5,
-      text: 'Absolutely amazing experience! The team at Pinguino made our honeymoon unforgettable. Every detail was perfect.',
-      initials: 'SJ'
-    },
-    {
-      id: 'michael-chen',
-      name: 'Michael Chen',
-      location: 'Toronto, Canada',
-      rating: 5,
-      text: 'Best travel agency I have ever worked with. Professional, responsive, and they truly care about creating the perfect trip.',
-      initials: 'MC'
-    },
-    {
-      id: 'emma-williams',
-      name: 'Emma Williams',
-      location: 'London, UK',
-      rating: 5,
-      text: 'I have traveled with Pinguino three times now and each experience has been exceptional. They know how to create memorable adventures.',
-      initials: 'EW'
-    }
-  ] : [
-    {
-      id: 'maria-rossi',
-      name: 'Maria Rossi',
-      location: 'Roma, Italia',
-      rating: 5,
-      text: 'Esperienza assolutamente straordinaria! Il team di Pinguino ha reso la nostra luna di miele indimenticabile. Ogni dettaglio era perfetto.',
-      initials: 'MR'
-    },
-    {
-      id: 'giovanni-bianchi',
-      name: 'Giovanni Bianchi',
-      location: 'Milano, Italia',
-      rating: 5,
-      text: 'La migliore agenzia di viaggi con cui abbia mai lavorato. Professionali, reattivi e attenti a creare il viaggio perfetto per i clienti.',
-      initials: 'GB'
-    },
-    {
-      id: 'laura-conti',
-      name: 'Laura Conti',
-      location: 'Firenze, Italia',
-      rating: 5,
-      text: 'Ho viaggiato con Pinguino tre volte e ogni esperienza è stata eccezionale. Sanno come creare avventure memorabili.',
-      initials: 'LC'
-    }
-  ];
 
   return (
     <>
@@ -193,9 +153,24 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} {...testimonial} />
-            ))}
+{testimonials.length > 0 ? (
+              testimonials.map((review) => (
+                <TestimonialCard 
+                  key={review.id}
+                  id={String(review.id)}
+                  name={review.username}
+                  location={`${review.city}, ${review.country}`}
+                  rating={review.rating}
+                  text={review.comment}
+                  initials={review.username.substring(0, 2).toUpperCase()}
+                />
+              ))
+            ) : (
+              // Fallback gdy brak opinii w bazie
+              <div className="col-span-full text-center py-10">
+                <p className="text-gray-500">No reviews yet.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -19,6 +19,8 @@ import { LoginPage } from './components/admin/LoginPage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { ToursManager } from './components/admin/ToursManager';
 import { NewsletterManager } from './components/admin/NewsletterManager';
+import { ReviewsManager } from './components/admin/ReviewsManager';
+import { CarsManager } from './components/admin/CarsManager';
 
 // Wrapper chroniący trasy (Protected Route)
 function ProtectedRoute() {
@@ -84,7 +86,8 @@ function AppContent() {
             <Route index element={<Navigate to="/backoffice/tours" replace />} />
             
             <Route path="tours" element={<ToursManager />} />
-            <Route path="cars" element={<div className="p-8">Cars Manager (Coming Soon)</div>} />
+            <Route path="reviews" element={<ReviewsManager />} />
+            <Route path="cars" element={< CarsManager/>} />
             <Route path="insurance" element={<div className="p-8">Insurance Manager (Coming Soon)</div>} />
             <Route path="newsletter" element={<NewsletterManager />} />
           </Route>

@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/button';
-import { LogOut, Car, Plane, Shield, Mail } from 'lucide-react';
+import { LogOut, Car, Plane, Shield, Mail, MessageSquare } from 'lucide-react'; // <--- Dodano MessageSquare
 
 export function AdminLayout() {
   const { logout } = useAuth();
@@ -10,7 +10,7 @@ export function AdminLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login'); // Przekierowanie na stronę logowania
+    navigate('/login');
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -18,8 +18,9 @@ export function AdminLayout() {
   const navItems = [
     { path: '/backoffice/tours', label: 'Tours', icon: Plane },
     { path: '/backoffice/cars', label: 'Cars', icon: Car },
-    { path: '/backoffice/insurance', label: 'Insurance', icon: Shield },
+    // { path: '/backoffice/insurance', label: 'Insurance', icon: Shield },
     { path: '/backoffice/newsletter', label: 'Newsletter', icon: Mail },
+    { path: '/backoffice/reviews', label: 'Reviews', icon: MessageSquare },
   ];
 
   return (

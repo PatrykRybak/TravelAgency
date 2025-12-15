@@ -10,34 +10,41 @@ tours_bp = Blueprint('tours', __name__)
 
 @tours_bp.route('', methods=['GET'])
 def get_tours():
-    # Pobieranie parametrów filtrowania
-    start_date_str = request.args.get('start_date')
-    end_date_str = request.args.get('end_date')
-    featured_only = request.args.get('featured') # Nowy parametr
+    # Pobieranie parametrów z URL (query string)
+    search_query = request.args.get('q', '').strip()
+    start_date = request.args.get('startDate')
+    end_date = request.args.get('endDate')
+    guests = request.args.get('guests', type=int)
     
-    query = Tour.query.filter_by(is_active=True)
+    query = Tour.query
 
-    # Filtracja po dacie (istniejąca logika)
-    if start_date_str:
+    if search_query:
+        search_term = f"%{search_query}%"
+        query = query.filter(
+            (Tour.title.ilike(search_term)) | 
+            (Tour.location.ilike(search_term))
+        )
+
+    if start_date:
         try:
-            s_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-            query = query.filter(Tour.start_date >= s_date)
+            date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+            query = query.filter(Tour.start_date >= date_obj)
         except ValueError:
             pass
 
-    if end_date_str:
+    if end_date:
         try:
-            e_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-            query = query.filter(Tour.end_date <= e_date)
+            date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+            query = query.filter(Tour.end_date <= date_obj)
         except ValueError:
             pass
 
-    # NOWE: Filtracja po featured
-    if featured_only == 'true':
-        query = query.filter_by(is_featured=True)
+    if guests:
+        pass 
 
-    tours = query.all()
-    return jsonify([tour.to_dict() for tour in tours])
+    tours = query.order_by(Tour.start_date.asc()).all()
+    
+    return jsonify([t.to_dict() for t in tours])
 
 @tours_bp.route('/<int:id>', methods=['GET'])
 def get_tour(id):
