@@ -92,7 +92,12 @@ export function ReviewsManager() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Client Reviews</h2>
+
+        <div>
+            <h2 className="text-2xl font-bold text-[#1B4965]">Client Reviews</h2>
+            <p className="text-gray-500">Manage clients opinions</p>
+        </div>
+
         <Dialog open={isOpen} onOpenChange={(open) => {
           setIsOpen(open);
           if (!open) {

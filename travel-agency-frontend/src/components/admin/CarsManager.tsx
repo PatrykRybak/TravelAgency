@@ -109,7 +109,12 @@ export function CarsManager() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Fleet Management</h2>
+
+        <div>
+            <h2 className="text-2xl font-bold text-[#1B4965]">Fleet Management</h2>
+            <p className="text-gray-500">Manage cars for renting</p>
+        </div>
+
         <Dialog open={isOpen} onOpenChange={(open) => {
           setIsOpen(open);
           if (!open) setEditingId(null);
