@@ -16,11 +16,9 @@ class Tour(db.Model):
     location = db.Column(db.String(100))
     region = db.Column(db.String(50))
     is_featured = db.Column(db.Boolean, default=False)
-    
-    # --- NOWE POLA ---
-    start_date = db.Column(db.Date, nullable=True) # Data początku
-    end_date = db.Column(db.Date, nullable=True)   # Data końca
-    is_active = db.Column(db.Boolean, default=True) # Czy wycieczka jest widoczna na stronie
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
 
     def to_dict(self):
         return {
@@ -36,7 +34,6 @@ class Tour(db.Model):
             'location': self.location,
             'region': self.region,
             'featured': self.is_featured,
-            # Serializacja dat do stringa YYYY-MM-DD
             'startDate': self.start_date.isoformat() if self.start_date else None,
             'endDate': self.end_date.isoformat() if self.end_date else None,
             'isActive': self.is_active

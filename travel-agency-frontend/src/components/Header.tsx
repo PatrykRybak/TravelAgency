@@ -1,17 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom'; // <--- Import Link
-import { Menu, X, Phone, Mail, Globe } from 'lucide-react';
-import { Button } from './ui/button';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Menu, X, Phone, Mail, Globe } from "lucide-react";
+import { Button } from "./ui/button";
+import { useLanguage } from "../contexts/LanguageContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-// Pamiętaj, aby ścieżka do logo była poprawna w Twoim projekcie
-// Jeśli Vite krzyczy o błędzie importu, przenieś logo do folderu public
-import logo from '../assets/2d27b71bc41de3ee10dd995aeef1ddee5fb7ea62.png'; 
+} from "./ui/dropdown-menu";
+import logo from "../assets/2d27b71bc41de3ee10dd995aeef1ddee5fb7ea62.png";
 
 interface HeaderProps {
   currentPage: string;
@@ -42,14 +40,14 @@ export function Header({ currentPage }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-1 text-sm hover:text-[#E8A628] transition-colors">
                   <Globe className="w-4 h-4" />
-                  <span>{language === 'en' ? 'EN' : 'IT'}</span>
+                  <span>{language === "en" ? "EN" : "IT"}</span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setLanguage('en')}>
+                <DropdownMenuItem onClick={() => setLanguage("en")}>
                   English
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('it')}>
+                <DropdownMenuItem onClick={() => setLanguage("it")}>
                   Italiano
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -70,33 +68,35 @@ export function Header({ currentPage }: HeaderProps) {
 
           {/* Desktop navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link 
-              to="/travels" 
-              className={`hover:text-[#E8A628] transition-colors ${currentPage === 'travels' ? 'text-[#E8A628]' : ''}`}
+            <Link
+              to="/travels"
+              className={`hover:text-[#E8A628] transition-colors ${
+                currentPage === "travels" ? "text-[#E8A628]" : ""
+              }`}
             >
               {t.travels}
             </Link>
-            <Link 
-              to="/rent-car" 
-              className={`hover:text-[#E8A628] transition-colors ${currentPage === 'rent-car' ? 'text-[#E8A628]' : ''}`}
+            <Link
+              to="/rent-car"
+              className={`hover:text-[#E8A628] transition-colors ${
+                currentPage === "rent-car" ? "text-[#E8A628]" : ""
+              }`}
             >
               {t.rentCar}
             </Link>
-            {/* <Link 
-              to="/insurance" 
-              className={`hover:text-[#E8A628] transition-colors ${currentPage === 'insurance' ? 'text-[#E8A628]' : ''}`}
-            >
-              {t.travelInsurance}
-            </Link> */}
-            <Link 
-              to="/our-story" 
-              className={`hover:text-[#E8A628] transition-colors ${currentPage === 'our-story' ? 'text-[#E8A628]' : ''}`}
+            <Link
+              to="/our-story"
+              className={`hover:text-[#E8A628] transition-colors ${
+                currentPage === "our-story" ? "text-[#E8A628]" : ""
+              }`}
             >
               {t.ourStory}
             </Link>
-            <Link 
-              to="/newsletter" 
-              className={`hover:text-[#E8A628] transition-colors ${currentPage === 'newsletter' ? 'text-[#E8A628]' : ''}`}
+            <Link
+              to="/newsletter"
+              className={`hover:text-[#E8A628] transition-colors ${
+                currentPage === "newsletter" ? "text-[#E8A628]" : ""
+              }`}
             >
               {t.newsletter}
             </Link>
@@ -123,17 +123,21 @@ export function Header({ currentPage }: HeaderProps) {
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
-              <Link 
-                to="/travels" 
+              <Link
+                to="/travels"
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-left hover:text-[#E8A628] transition-colors ${currentPage === 'travels' ? 'text-[#E8A628]' : ''}`}
+                className={`text-left hover:text-[#E8A628] transition-colors ${
+                  currentPage === "travels" ? "text-[#E8A628]" : ""
+                }`}
               >
                 {t.travels}
               </Link>
-              <Link 
-                to="/rent-car" 
+              <Link
+                to="/rent-car"
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-left hover:text-[#E8A628] transition-colors ${currentPage === 'rent-car' ? 'text-[#E8A628]' : ''}`}
+                className={`text-left hover:text-[#E8A628] transition-colors ${
+                  currentPage === "rent-car" ? "text-[#E8A628]" : ""
+                }`}
               >
                 {t.rentCar}
               </Link>
@@ -144,21 +148,25 @@ export function Header({ currentPage }: HeaderProps) {
               >
                 {t.travelInsurance}
               </Link> */}
-              <Link 
-                to="/our-story" 
+              <Link
+                to="/our-story"
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-left hover:text-[#E8A628] transition-colors ${currentPage === 'our-story' ? 'text-[#E8A628]' : ''}`}
+                className={`text-left hover:text-[#E8A628] transition-colors ${
+                  currentPage === "our-story" ? "text-[#E8A628]" : ""
+                }`}
               >
                 {t.ourStory}
               </Link>
-              <Link 
-                to="/newsletter" 
+              <Link
+                to="/newsletter"
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-left hover:text-[#E8A628] transition-colors ${currentPage === 'newsletter' ? 'text-[#E8A628]' : ''}`}
+                className={`text-left hover:text-[#E8A628] transition-colors ${
+                  currentPage === "newsletter" ? "text-[#E8A628]" : ""
+                }`}
               >
                 {t.newsletter}
               </Link>
-              
+
               <Link to="/newsletter" onClick={() => setIsMenuOpen(false)}>
                 <Button className="w-full bg-[#E8A628] hover:bg-[#D4A024] text-white">
                   {t.contactUs}

@@ -1,54 +1,119 @@
-import { Clock, Users, Star, Calendar, FileDown } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Card, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { useLanguage } from '../contexts/LanguageContext';
-// Importy biblioteki PDF
-import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image as PdfImage } from '@react-pdf/renderer';
+import { useState } from "react";
+import {
+  Clock,
+  Users,
+  Calendar,
+  FileDown,
+  MailQuestion,
+  MapPin,
+} from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Card, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { useLanguage } from "../contexts/LanguageContext";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  Image as PdfImage,
+} from "@react-pdf/renderer";
+import { InquiryDialog } from "./InquiryDialog";
 
 interface PackageCardProps {
+  id: string;
   image: string;
   title: string;
   duration: string;
   groupSize: string;
-  rating: number;
-  reviews: number;
   price: number;
   description: string;
+  location: string;
+  startDate?: string;
+  endDate?: string;
   featured?: boolean;
 }
 
-// ==========================================
-// 1. DEFINICJA WYGLĄDU DOKUMENTU PDF
-// ==========================================
+const formatDate = (dateString?: string) => {
+  if (!dateString) return "";
+  const parts = dateString.split("-");
+  if (parts.length !== 3) return dateString;
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+};
+
 const styles = StyleSheet.create({
-  page: { padding: 30, fontFamily: 'Helvetica' },
-  header: { fontSize: 24, marginBottom: 15, color: '#1B4965', textAlign: 'center' },
-  imageContainer: { width: '100%', height: 200, marginBottom: 15, borderRadius: 4, overflow: 'hidden' },
-  image: { width: '100%', height: '100%', objectFit: 'cover' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 4 },
-  label: { fontSize: 10, color: '#666' },
-  value: { fontSize: 12, fontWeight: 'bold', color: '#333' },
-  description: { fontSize: 11, lineHeight: 1.5, marginTop: 15, marginBottom: 15, color: '#444' },
-  priceSection: { marginTop: 10, alignItems: 'flex-end' },
-  priceLabel: { fontSize: 10, color: '#666' },
-  priceValue: { fontSize: 20, color: '#E8A628', fontWeight: 'bold' },
-  footer: { position: 'absolute', bottom: 30, left: 30, right: 30, fontSize: 9, textAlign: 'center', color: '#999' }
+  page: { padding: 30, fontFamily: "Helvetica" },
+  header: {
+    fontSize: 24,
+    marginBottom: 5,
+    color: "#1B4965",
+    textAlign: "center",
+  },
+  subHeader: {
+    fontSize: 12,
+    marginBottom: 15,
+    color: "#666",
+    textAlign: "center",
+  },
+  imageContainer: {
+    width: "100%",
+    height: 200,
+    marginBottom: 15,
+    borderRadius: 4,
+    overflow: "hidden",
+  },
+  image: { width: "100%", height: "100%", objectFit: "cover" },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 4,
+  },
+  label: { fontSize: 10, color: "#666" },
+  value: { fontSize: 12, fontWeight: "bold", color: "#333" },
+  description: {
+    fontSize: 11,
+    lineHeight: 1.5,
+    marginTop: 15,
+    marginBottom: 15,
+    color: "#444",
+  },
+  priceSection: { marginTop: 10, alignItems: "flex-end" },
+  priceLabel: { fontSize: 10, color: "#666" },
+  priceValue: { fontSize: 20, color: "#E8A628", fontWeight: "bold" },
+  footer: {
+    position: "absolute",
+    bottom: 30,
+    left: 30,
+    right: 30,
+    fontSize: 9,
+    textAlign: "center",
+    color: "#999",
+  },
 });
 
-// Ten komponent definiuje strukturę pliku .pdf
 const PackagePdfDocument = ({ data }: { data: PackageCardProps }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <Text style={styles.header}>{data.title}</Text>
-      
-      {/* Obrazek w PDF. Jeśli powoduje błędy CORS, zakomentuj linię poniżej */}
+      <Text style={styles.subHeader}>{data.location}</Text>
       <View style={styles.imageContainer}>
-         <PdfImage src={data.image} style={styles.image} />
+        <PdfImage src={data.image} style={styles.image} />
       </View>
-
       <View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Dates</Text>
+          <Text style={styles.value}>
+            {data.startDate && data.endDate
+              ? `${formatDate(data.startDate)} - ${formatDate(data.endDate)}`
+              : "Flexible dates"}
+          </Text>
+        </View>
         <View style={styles.row}>
           <Text style={styles.label}>Duration</Text>
           <Text style={styles.value}>{data.duration}</Text>
@@ -57,19 +122,12 @@ const PackagePdfDocument = ({ data }: { data: PackageCardProps }) => (
           <Text style={styles.label}>Group Size</Text>
           <Text style={styles.value}>{data.groupSize}</Text>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Rating</Text>
-          <Text style={styles.value}>{data.rating} / 5 ({data.reviews} reviews)</Text>
-        </View>
       </View>
-
       <Text style={styles.description}>{data.description}</Text>
-
       <View style={styles.priceSection}>
-        <Text style={styles.priceLabel}>Total Price</Text>
+        <Text style={styles.priceLabel}>Price per person</Text>
         <Text style={styles.priceValue}>€{data.price}</Text>
       </View>
-
       <Text style={styles.footer}>
         Generated by Pinguino Travel App • {new Date().toLocaleDateString()}
       </Text>
@@ -77,88 +135,122 @@ const PackagePdfDocument = ({ data }: { data: PackageCardProps }) => (
   </Document>
 );
 
-// ==========================================
-// 2. KOMPONENT WIDOKU (KARTA NA STRONIE)
-// ==========================================
 export function PdfPackageCard(props: PackageCardProps) {
   const {
+    id,
     image,
     title,
     duration,
     groupSize,
-    rating,
-    reviews,
     price,
     description,
-    featured = false
+    location,
+    startDate,
+    endDate,
+    featured = false,
   } = props;
-  
+
   const { t } = useLanguage();
 
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+
+  const formatDateRange = () => {
+    if (!startDate || !endDate) return "Check availability";
+    return `${formatDate(startDate)} — ${formatDate(endDate)}`;
+  };
+
   return (
-    <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full border-2 border-transparent hover:border-[#E8A628]/20">
-      <div className="relative h-56 overflow-hidden shrink-0">
-        <ImageWithFallback
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all"
-        />
-        {featured && (
-          <Badge className="absolute top-4 left-4 bg-[#E8A628]">
-            {t.featured}
-          </Badge>
-        )}
-      </div>
-      
-      <CardContent className="p-6 flex flex-col flex-grow">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span>{rating}</span>
-          </div>
-          <span className="text-gray-500">({reviews} reviews)</span>
-        </div>
-        
-        <h3 className="mb-3 text-xl font-semibold">{title}</h3>
-        
-        {/* Skrócony opis na karcie */}
-        <p className="text-gray-600 mb-4 flex-grow line-clamp-2 text-sm">{description}</p>
-        
-        <div className="flex flex-wrap gap-4 mb-6 text-sm text-gray-600">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span>{duration}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            <span>{groupSize}</span>
+    <>
+      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-gray-100 hover:border-[#E8A628]/50 group">
+        <div className="relative h-56 overflow-hidden shrink-0">
+          <ImageWithFallback
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          {featured && (
+            <Badge className="absolute top-4 left-4 bg-[#E8A628] hover:bg-[#d49622] border-none shadow-sm">
+              {t.featured}
+            </Badge>
+          )}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+            <div className="flex items-center text-white text-xs font-medium gap-1">
+              <MapPin className="w-3 h-3 text-[#E8A628]" />
+              {location}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t mt-auto">
-          <div>
-            <span className="text-gray-500 text-sm">{t.from}</span>
-            <div className="text-[#1B4965] text-xl font-bold">€{price}</div>
+        <CardContent className="p-5 flex flex-col flex-grow">
+          <h3 className="mb-3 text-lg font-bold text-[#1B4965] line-clamp-2 min-h-[3.5rem]">
+            {title}
+          </h3>
+
+          <div className="grid grid-cols-2 gap-y-2 gap-x-4 mb-4 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <div className="col-span-2 flex items-center gap-2 text-[#1B4965] font-medium border-b border-gray-100 pb-2 mb-1">
+              <Calendar className="w-4 h-4 text-[#E8A628]" />
+              <span className="truncate">{formatDateRange()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-gray-400" />
+              <span>{duration}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-gray-400" />
+              <span>{groupSize}</span>
+            </div>
           </div>
 
-          {/* GENEROWANIE PDF */}
-          <PDFDownloadLink
-            document={<PackagePdfDocument data={props} />}
-            fileName={`${title.replace(/\s+/g, '_').toLowerCase()}.pdf`}
-            className="decoration-0"
-          >
-            {({ loading }) => (
-              <Button 
-                disabled={loading}
-                className="bg-[#1B4965] hover:bg-[#153a50] text-white gap-2"
+          <p className="text-gray-500 mb-6 flex-grow line-clamp-3 text-sm leading-relaxed">
+            {description}
+          </p>
+
+          <div className="pt-4 border-t border-gray-100 mt-auto">
+            <div className="flex justify-between items-end mb-4">
+              <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">
+                Price per person
+              </span>
+              <div className="text-[#1B4965] text-2xl font-bold">€{price}</div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <PDFDownloadLink
+                document={<PackagePdfDocument data={props} />}
+                fileName={`${title.replace(/\s+/g, "_").toLowerCase()}.pdf`}
+                className="w-full decoration-0"
               >
-                <FileDown className="w-4 h-4" />
-                {loading ? '...' : 'PDF'}
+                {({ loading }) => (
+                  <Button
+                    disabled={loading}
+                    variant="outline"
+                    className="w-full border-[#1B4965] text-[#1B4965] hover:bg-[#1B4965]/5 gap-2"
+                  >
+                    <FileDown className="w-4 h-4" />
+                    {loading ? "..." : "PDF"}
+                  </Button>
+                )}
+              </PDFDownloadLink>
+
+              <Button
+                onClick={() => setIsInquiryOpen(true)}
+                className="w-full bg-[#E8A628] hover:bg-[#d49622] text-white gap-2 shadow-sm"
+              >
+                <MailQuestion className="w-4 h-4" />
+                Inquiry
               </Button>
-            )}
-          </PDFDownloadLink>
-        </div>
-      </CardContent>
-    </Card>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* MODAL INQUIRY */}
+      <InquiryDialog
+        isOpen={isInquiryOpen}
+        onClose={() => setIsInquiryOpen(false)}
+        itemTitle={title}
+        itemType="tour"
+        itemId={id}
+      />
+    </>
   );
 }

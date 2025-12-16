@@ -6,7 +6,6 @@ cars_bp = Blueprint('cars', __name__)
 
 @cars_bp.route('', methods=['GET'])
 def get_cars():
-    # Pobieramy tylko aktywne dla klienta, wszystkie dla admina
     admin_request = request.args.get('admin', 'false') == 'true'
     
     query = Car.query
@@ -26,7 +25,7 @@ def create_car():
         seats=data['seats'],
         transmission=data['transmission'],
         image_url=data.get('image', ''),
-        features=data.get('features', ''), # Oczekujemy stringa "GPS,AC"
+        features=data.get('features', ''),
         is_active=data.get('isActive', True)
     )
     db.session.add(new_car)

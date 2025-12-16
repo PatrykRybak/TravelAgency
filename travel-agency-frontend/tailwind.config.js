@@ -45,7 +45,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Twoje kolory firmowe:
+        // Brand colors
         pinguino: {
           blue: "#1B4965",
           darkBlue: "#153a50",

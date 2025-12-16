@@ -24,11 +24,11 @@ export function Footer() {
                   {t.rentCar}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/insurance" className="text-gray-400 hover:text-[#E8A628] transition-colors">
                   {t.travelInsurance}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/our-story" className="text-gray-400 hover:text-[#E8A628] transition-colors">
                   {t.ourStory}

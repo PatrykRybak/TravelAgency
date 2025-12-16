@@ -8,7 +8,7 @@ class Newsletter(db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
-    interests = db.Column(db.Text) # Przechowujemy jako string, np. "adventure,luxury"
+    interests = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
     def to_dict(self):

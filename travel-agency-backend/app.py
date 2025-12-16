@@ -7,7 +7,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Inicjalizacja wtyczek
     db.init_app(app)
     jwt.init_app(app)
     cors.init_app(app, supports_credentials=True, resources={
@@ -21,13 +20,13 @@ def create_app():
         }
     })
 
-    # Rejestracja Blueprintów (Modułów)
     from routes.tours import tours_bp
     from routes.auth import auth_bp
     from routes.reviews import reviews_bp
     from routes.cars import cars_bp
     from routes.insurances import insurance_bp
     from routes.newsletter import newsletter_bp
+    from routes.inquiries import inquiries_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(tours_bp, url_prefix='/api/tours')
@@ -35,16 +34,16 @@ def create_app():
     app.register_blueprint(cars_bp, url_prefix='/api/cars')
     app.register_blueprint(insurance_bp, url_prefix='/api/insurance')
     app.register_blueprint(newsletter_bp, url_prefix='/api/newsletter')
+    app.register_blueprint(inquiries_bp, url_prefix='/api/inquiries')
 
-    # Automatyczne tworzenie wszystkich tabel
     with app.app_context():
-        # Importujemy modele tutaj, aby SQLAlchemy o nich wiedział przy tworzeniu
         from models.tour import Tour
         from models.user import User
         from models.review import Review
         from models.car import Car
         from models.insurance import Insurance
         from models.newsletter import Newsletter
+        from models.inquiry import Inquiry
         
         db.create_all()
 

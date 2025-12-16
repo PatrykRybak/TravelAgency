@@ -6,7 +6,7 @@ class Review(db.Model):
     username = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(100), nullable=False)
     country = db.Column(db.String(100), nullable=False)
-    rating = db.Column(db.Integer, nullable=False) # 0-5
+    rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -3,13 +3,13 @@ from datetime import datetime
 
 class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False) # np. Toyota Yaris
-    category = db.Column(db.String(50), nullable=False) # economy, suv, luxury
+    name = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
     price_per_day = db.Column(db.Float, nullable=False)
     seats = db.Column(db.Integer, nullable=False)
-    transmission = db.Column(db.String(20), nullable=False) # automatic, manual
+    transmission = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String(500), nullable=True)
-    features = db.Column(db.Text, nullable=True) # Przechowujemy jako string "GPS,Bluetooth,AC"
+    features = db.Column(db.Text, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

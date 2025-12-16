@@ -1,24 +1,24 @@
-# backend/config.py
+import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
-    # Baza danych
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://pinguino_user:pinguino123@145.239.81.215/pinguino_travel?charset=utf8mb4'
+    DB_USER = os.getenv('DB_USER')
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    DB_HOST = os.getenv('DB_HOST')
+    DB_NAME = os.getenv('DB_NAME')
+
+    if not all([DB_USER, DB_PASSWORD, DB_HOST, DB_NAME]):
+        raise ValueError("Brak konfiguracji bazy danych w pliku .env!")
+
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    
-    JWT_SECRET_KEY = 'super-tajny-klucz-pinguino-zmien-mnie'
-    
-    # --- KONFIGURACJA CIASTECZEK (NAPRAWIONA) ---
+
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'default-dev-key')
     JWT_TOKEN_LOCATION = ["cookies"]
-    
-    # Na localhost MUSI być False. Na produkcji (https) zmień na True.
     JWT_COOKIE_SECURE = False 
-    
-    # Ważne: Wyłączamy CSRF na start, żeby nie blokowało requestów z innej domeny/portu
     JWT_COOKIE_CSRF_PROTECT = False
-    
-    # KLUCZOWE DLA LOCALHOST: 'Lax' pozwala na przesyłanie ciastek w ramach tej samej domeny (localhost)
     JWT_COOKIE_SAMESITE = 'Lax'
-    
-    # Czas życia tokena
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)

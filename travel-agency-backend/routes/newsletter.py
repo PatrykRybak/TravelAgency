@@ -5,15 +5,11 @@ from flask_jwt_extended import jwt_required
 
 newsletter_bp = Blueprint('newsletter', __name__)
 
-# --- PUBLICZNE: ZAPIS DO NEWSLETTERA ---
 @newsletter_bp.route('/subscribe', methods=['POST'])
 def subscribe():
-    # Brak @jwt_required - każdy może się zapisać
     data = request.json
     
-    # Sprawdzamy czy email już istnieje
     if Newsletter.query.filter_by(email=data['email']).first():
-        # Zwracamy sukces nawet jak istnieje, żeby nie zdradzać bazy (security through obscurity)
         return jsonify({'message': 'Subscribed successfully'}), 200
         
     try:
@@ -29,14 +25,12 @@ def subscribe():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# --- CHRONIONE (ADMIN): POBIERANIE LISTY ---
 @newsletter_bp.route('', methods=['GET'])
 @jwt_required()
 def get_subscribers():
     subscribers = Newsletter.query.all()
     return jsonify([sub.to_dict() for sub in subscribers])
 
-# --- CHRONIONE (ADMIN): USUWANIE ---
 @newsletter_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_subscriber(id):
